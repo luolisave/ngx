@@ -1,0 +1,677 @@
+{
+	"info": {
+		"_postman_id": "d8dc3c31-9c04-42c5-b04a-f82feac02fd5",
+		"name": "storage/v5.x",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "storage v5.x",
+			"item": [
+				{
+					"name": "[sqlite] item get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f096a31-9e62-4270-b11e-1389c605f465",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=sqlite&ctype=raw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "sqlite"
+								},
+								{
+									"key": "ctype",
+									"value": "raw"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "[sqlite] item create/update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "144be74d-dd5a-4b8c-89de-bb3a1e2b666f",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"anything\":\"anything\",\n  \"note\":\"set.php version 2 a\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=sqlite&ctype=raw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "sqlite"
+								},
+								{
+									"key": "ctype",
+									"value": "raw"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "[sqlite] item delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ca0ff065-4b26-43ea-8327-eed6012648b4",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"anything\":\"anything\",\n  \"note\":\"set.php version 2 a\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=sqlite",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "sqlite"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "[file] item get",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "40c546ec-079a-4c7d-b4e8-50bcd6ca10be",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=file&ctype=raw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "file"
+								},
+								{
+									"key": "ctype",
+									"value": "raw"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "[file] item create/update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0bfd6ae5-b1a4-4659-a13a-fbac90c21f7d",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"anything\":\"anything\",\n  \"note\":\"set.php version 2 a\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=file&ctype=raw",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "file"
+								},
+								{
+									"key": "ctype",
+									"value": "raw"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "[file] item delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "570ae482-ffa6-49ea-a046-05a6ea7a3969",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"anything\":\"anything\",\n  \"note\":\"set.php version 2 a\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=file",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "file"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "ss simple_store : get item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a7ab3703-6cad-4bd4-8839-0c8781571849",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=simple_store&ctype=raw&getmsg=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "simple_store"
+								},
+								{
+									"key": "ctype",
+									"value": "raw"
+								},
+								{
+									"key": "getmsg",
+									"value": "true"
+								}
+							]
+						},
+						"description": "stype: ss or simplestore or simple_store\ngetmsg: true\n\npasscode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "ss simple_store : set item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ced50161-e91d-4b92-8e7a-c107784532b5",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/?passcode=passcode&username=luolisave@gmail.com&hash=16&stype=simple_store&ctype=raw&setmsg=this_is_my_item",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								""
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "username",
+									"value": "luolisave@gmail.com"
+								},
+								{
+									"key": "hash",
+									"value": "16"
+								},
+								{
+									"key": "stype",
+									"value": "simple_store"
+								},
+								{
+									"key": "ctype",
+									"value": "raw"
+								},
+								{
+									"key": "setmsg",
+									"value": "this_is_my_item"
+								}
+							]
+						},
+						"description": "stype: ss or simplestore or simple_store\n\npasscode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "email (local api.lluo.dev)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "305db12b-8713-46f5-9ae1-9ea75afa575d",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email_from\":\"test@localhost\",\n  \"email_to\":\"luolisave@localhost\",\n  \"email_subject\":\"test email subject （api.lluo.dev）\",\n  \"email_content\":\"1. test email body.\\r\\n  2. second line. \\r\\n 3.haha.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/index.php?passcode=passcode&hash=na&username=na&email=email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "hash",
+									"value": "na"
+								},
+								{
+									"key": "username",
+									"value": "na"
+								},
+								{
+									"key": "email",
+									"value": "email"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "email (remote api.lluo.ca)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a0cc005f-d68b-46e5-a061-fccc38f8f798",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email_from\":\"test@lluo.ca\",\n  \"email_to\":\"luolisave@gmail.com\",\n  \"email_subject\":\"test email subject.\",\n  \"email_content\":\"1. test email body.\\r\\n  2. second line. \\r\\n 3.haha.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost/storage/v5.x/index.php?passcode=passcode&hash=na&username=na&email=email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"storage",
+								"v5.x",
+								"index.php"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode"
+								},
+								{
+									"key": "hash",
+									"value": "na"
+								},
+								{
+									"key": "username",
+									"value": "na"
+								},
+								{
+									"key": "email",
+									"value": "email"
+								}
+							]
+						},
+						"description": "passcode:  used to prevent potential hack.\nusername:  is used as folder name.\nhash:      is used as file name.\n"
+					},
+					"response": []
+				}
+			],
+			"description": "pretty url added."
+		}
+	]
+}

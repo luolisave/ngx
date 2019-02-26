@@ -1,0 +1,1105 @@
+{
+	"info": {
+		"_postman_id": "51da8ee5-3b19-9f7b-d87b-5987b14b64f5",
+		"name": "liCMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"//postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", jsonData.data.token);",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\":\"admin\",\n  \"password\":\"pass1234\"\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/user/login",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forget token (logout)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "515b836a-2535-49fd-acd4-4d0db7bc1d68",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"///// postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
+									"postman.setGlobalVariable(\"token\", \"wrong_token\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\":\"admin\",\n  \"password\":\"pass1234\"\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/user/login",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "password hashed by SHA512.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a4b3e077-417e-4f48-b457-37b7d20048ef",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "6666fce8-5120-444d-b634-fa9bb80493ec",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Page",
+			"item": [
+				{
+					"name": "list all pages",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1f638c76-ac7d-4519-aa25-f72cf46a3767",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"page",
+								"list"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "list all pages",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
+									"protocol": "http",
+									"host": [
+										"{{liCMSHost}}"
+									],
+									"port": "{{liCMSPort}}",
+									"path": [
+										"api",
+										"v1",
+										"page",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "187"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"bb-qPt73zWgPFMq1AJsuKvyY+0Q6zs\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Oct 2018 20:24:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 1,\n    \"info\": \"Success: document retrieved.\",\n    \"data\": [\n        {\n            \"pageId\": 1,\n            \"pageTitle\": \"page title 1\",\n            \"type\": \"page\",\n            \"pageContent\": \"page content 1\",\n            \"status\": \"active\",\n            \"_id\": \"F7ws8fkFNejjP1iK\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "get single page",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71184b46-a5a0-4f84-9e3f-ef70a2d4cb22",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/E9eycw34UgoibMwj",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"page",
+								"E9eycw34UgoibMwj"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create page",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageTitle\": \"page title with bulk data test 4\",\r\n    \"___bulk\": {\"data\": \"bulk obj, biiiiiiigggggg data should put here, will save in file instead.\"}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/create",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"page",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update page",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"pageTitle\": \"n1 page title ???\",\r\n    \"type\": \"page\",\r\n    \"pageContent\": \"page content\",\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638},\r\n    \"___bulk\": {\"data\": \"bulk obj 3, biiiiiiigggggg data should put here, will save in file instead.\"}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/K5teAuvNBkFjVePN",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"page",
+								"K5teAuvNBkFjVePN"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete page",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"pageTitle\": \"page title z\",\r\n    \"type\": \"page\",\r\n    \"pageContent\": \"page content fdasfdasf\",\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/K5teAuvNBkFjVePN",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"page",
+								"K5teAuvNBkFjVePN"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mock with Passcode",
+			"item": [
+				{
+					"name": "list all mocks",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1f638c76-ac7d-4519-aa25-f72cf46a3767",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/list?passcode=passcode1234",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"mock",
+								"list"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode1234"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "list all pages",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
+									"protocol": "http",
+									"host": [
+										"{{liCMSHost}}"
+									],
+									"port": "{{liCMSPort}}",
+									"path": [
+										"api",
+										"v1",
+										"page",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "187"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"bb-qPt73zWgPFMq1AJsuKvyY+0Q6zs\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Oct 2018 20:24:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 1,\n    \"info\": \"Success: document retrieved.\",\n    \"data\": [\n        {\n            \"pageId\": 1,\n            \"pageTitle\": \"page title 1\",\n            \"type\": \"page\",\n            \"pageContent\": \"page content 1\",\n            \"status\": \"active\",\n            \"_id\": \"F7ws8fkFNejjP1iK\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "get single mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71184b46-a5a0-4f84-9e3f-ef70a2d4cb22",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/S0PaX9SwtVOe7bPD?passcode=passcode1234",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"mock",
+								"S0PaX9SwtVOe7bPD"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageTitle\": \"mock title 1n\",\r\n    \"type\": \"\",\r\n    \"pageContent\": \"mock mock mock\",\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/create?passcode=passcode1234",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"mock",
+								"create"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"pageTitle\": \"page title z\",\r\n    \"type\": \"page\",\r\n    \"pageContent\": \"page content fdasfdasf\",\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/S0PaX9SwtVOe7bPD?passcode=passcode1234",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"mock",
+								"S0PaX9SwtVOe7bPD"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"pageTitle\": \"???335 mock title ???\",\r\n    \"type\": \"mock\",\r\n    \"pageContent\": \"mock content\",\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/GVCTkzN9evuKbm02?passcode=passcode1234",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"mock",
+								"GVCTkzN9evuKbm02"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode1234"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mock",
+			"item": [
+				{
+					"name": "list all mocks",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1f638c76-ac7d-4519-aa25-f72cf46a3767",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/mock/list",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"mock",
+								"list"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "list all pages",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
+									"protocol": "http",
+									"host": [
+										"{{liCMSHost}}"
+									],
+									"port": "{{liCMSPort}}",
+									"path": [
+										"api",
+										"v1",
+										"page",
+										"list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "187"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"bb-qPt73zWgPFMq1AJsuKvyY+0Q6zs\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 09 Oct 2018 20:24:45 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 1,\n    \"info\": \"Success: document retrieved.\",\n    \"data\": [\n        {\n            \"pageId\": 1,\n            \"pageTitle\": \"page title 1\",\n            \"type\": \"page\",\n            \"pageContent\": \"page content 1\",\n            \"status\": \"active\",\n            \"_id\": \"F7ws8fkFNejjP1iK\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "get single mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "71184b46-a5a0-4f84-9e3f-ef70a2d4cb22",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/mock/1lcyijBFZdahhXpQ",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"mock",
+								"1lcyijBFZdahhXpQ"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageTitle\": \"mock title 1n\",\r\n    \"type\": \"\",\r\n    \"pageContent\": \"mock mock mock\",\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/create?passcode=passcode1234",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"mock",
+								"create"
+							],
+							"query": [
+								{
+									"key": "passcode",
+									"value": "passcode1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"pageTitle\": \"page title z\",\r\n    \"type\": \"page\",\r\n    \"pageContent\": \"page content fdasfdasf\",\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/mock/S0PaX9SwtVOe7bPD",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"mock",
+								"S0PaX9SwtVOe7bPD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update mock",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"pageTitle\": \"???335 mock title ???\",\r\n    \"type\": \"mock\",\r\n    \"pageContent\": \"mock content\",\r\n    \"fakeResponse\": {\"something\":\"fakeResponse here\"},\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/mock/1lcyijBFZdahhXpQ",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"mock",
+								"1lcyijBFZdahhXpQ"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Business",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n    \"pageTitle\": \"mock: modify by business\",\r\n    \"type\": \"mock\",\r\n    \"pageContent\": \"mock content\",\r\n    \"fakeResponse\": {\"something\":\"fakeResponse here\"},\r\n    \"status\": \"active\",\r\n    \"updateDate\": {\"$$date\":1539113186638}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/mock/business",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"mock",
+								"business"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
