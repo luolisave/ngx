@@ -1,0 +1,29 @@
+{
+  "name": "li-cms-server",
+  "version": "0.0.1",
+  "description": "Li's cms server",
+  "main": "index.js",
+  "scripts": {
+    "serve": "cross-os _serves",
+    "_serves": {
+      "darwin": "echo '--- I will only run on Mac' -----",
+      "win32": "node_modules\\.bin\\node-dev.cmd index.js",
+      "linux": "node_modules\\.bin\\node-dev index.js"
+    },
+    "serve-prod": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cross-os": "^1.3.0",
+    "node-dev": "^3.1.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "hasha": "^3.0.0",
+    "json-size": "^1.0.0",
+    "nedb": "^1.8.0",
+    "randomstring": "^1.1.5"
+  }
+}
