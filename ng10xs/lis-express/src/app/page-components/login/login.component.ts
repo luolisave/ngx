@@ -28,7 +28,10 @@ export class LoginComponent implements OnInit {
     const username = this.loginForm.controls.username.value;
     const password = this.loginForm.controls.password.value;
     console.log('onSubmit clicked! username = ' , username, ' password = ', password);
-    this.userService.login('tester', '12345678');
+    // this.userService.login(username, password);
+    if (this.userService.login(username, password)) {
+      // redirect to notes by default
+    }
   }
 
 }

@@ -9,8 +9,17 @@ import { PageNotFoundComponent  } from './page-components/page-not-found/page-no
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  {
+    path: 'notes',
+    loadChildren: () => import('./modules/notes/notes.module').then(m => m.NotesModule)
+  },
+  {
+    path: 'bookmarks',
+    loadChildren: () => import('./modules/bookmarks/bookmarks.module').then(m => m.BookmarksModule)
+  },
+  { path: '404', component: PageNotFoundComponent },
   { path: '',   redirectTo: '/home', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', redirectTo: '/404' }
 ];
 
 @NgModule({
