@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,6 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './page-components/home/home.component';
 import { PageNotFoundComponent } from './page-components/page-not-found/page-not-found.component';
 import { LoginComponent } from './page-components/login/login.component';
+import { UserService } from './services/user.service';
 
 
 @NgModule({
@@ -23,12 +25,13 @@ import { LoginComponent } from './page-components/login/login.component';
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule, FormsModule,
     BrowserAnimationsModule,
     NgbModule,
     MatCardModule, MatInputModule, MatButtonModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

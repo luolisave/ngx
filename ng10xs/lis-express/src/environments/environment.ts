@@ -3,7 +3,14 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  type: 'dev',
+  api: {
+    host: 'http://localhost',
+    port: ':4200',
+    path: '/mock',
+    AUTH: 'auth.json'
+  }
 };
 
 /*
