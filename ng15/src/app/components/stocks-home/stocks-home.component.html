@@ -1,1 +1,9 @@
-<p>stocks-home works!</p>
+<div>
+  <h1>Stocks:</h1>
+  <button (click)="getStocks()">get stocks</button>
+  <ul>
+    <li *ngFor="let stock of (stocks$ | async)">
+      <span style="min-width: 50px;">{{stock?._id}}</span>, ${{stock?.price}}
+    </li>
+  </ul>
+</div>
