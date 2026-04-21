@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 interface Post { title: string; date: string; excerpt?: string }
 
 @Component({
+  selector: 'app-posts',
   standalone: true,
   imports: [CommonModule],
   template: `
