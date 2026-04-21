@@ -18,8 +18,8 @@ import { FormsModule } from '@angular/forms';
       </ng-template>
 
       <div class="input-row">
-        <input [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
-        <button (click)="sendMessage()">Send</button>
+        <input [disabled]="loading" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
+        <button [disabled]="loading" (click)="sendMessage()">Send</button>
       </div>
     </section>
   `,
@@ -34,7 +34,9 @@ import { FormsModule } from '@angular/forms';
     `.message.user .bubble{background:#0366d6;color:white}`,
     `.input-row{display:flex;gap:0.5rem;margin-top:0.75rem}`,
     `input{flex:1;padding:0.5rem;border:1px solid #ddd;border-radius:6px}`,
+    `input:disabled{opacity:0.6;cursor:not-allowed;background:#f7f7f7}`,
     `button{padding:0.5rem 0.75rem;border:none;background:#0366d6;color:#fff;border-radius:6px}`,
+    `button:disabled{opacity:0.6;cursor:not-allowed;background:#999;color:#eee}`,
     `.empty{color:#666}`
   ]
 })
@@ -43,6 +45,7 @@ export class BotPage implements OnInit {
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
   apiKey = '';
+  loading = false;
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -53,8 +56,10 @@ export class BotPage implements OnInit {
   sendMessage() {
     const text = (this.newMessage || '').trim();
     if (!text) return;
+    if (this.loading) return;
     this.messages.push({ from: 'user', text });
     this.newMessage = '';
+    this.loading = true;
     this.botReply(text);
   }
 
@@ -62,6 +67,9 @@ export class BotPage implements OnInit {
     // show a typing placeholder
     this.messages.push({ from: 'bot', text: '...' });
     this.cdr.detectChanges();
+
+    // ensure loading state in case botReply is called directly
+    this.loading = true;
 
     try {
       const reply = await this.openAIChat(userText);
@@ -82,6 +90,8 @@ export class BotPage implements OnInit {
       }
     }
 
+    // Clear loading and update UI
+    this.loading = false;
     this.cdr.detectChanges();
   }
 
