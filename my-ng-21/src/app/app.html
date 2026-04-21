@@ -1,12 +1,14 @@
 <style>
+  .nav a{ text-decoration:none;color:inherit;padding:0.25rem 0.5rem;border-radius:4px }
+  .nav a.active{ font-weight:700;color:#0366d6;background:rgba(3,102,214,0.08) }
 </style>
 
 <main class="main">
   <header style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid #e6e6e6;">
-      <div style="display:flex;align-items:center;gap:1rem;">
-        <a routerLink="/" style="text-decoration:none;color:inherit;font-weight:600">Home</a>
-        <a routerLink="/about" style="text-decoration:none;color:inherit">About</a>
-        <a routerLink="/posts" style="text-decoration:none;color:inherit">Posts</a>
+      <div class="nav" style="display:flex;align-items:center;gap:1rem;">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" style="color:inherit">Home</a>
+        <a routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" style="color:inherit">About</a>
+        <a routerLink="/posts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" style="color:inherit">Posts</a>
       </div>
       <div style="opacity:0.8">Personal site</div>
     </header>
