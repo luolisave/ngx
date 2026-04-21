@@ -1,10 +1,10 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
     <div class="bot-page-wrap">
       <section class="business-wrap">
@@ -12,20 +12,20 @@ import { FormsModule } from '@angular/forms';
         <p>Here is an example form, you can enter your information here:</p>
 
         <div>
-          <form>
+          <form [formGroup]="form" (ngSubmit)="submitForm()">
             <div class="api-row">
               <label for="first-name">First Name:</label>
-              <input id="first-name" [(ngModel)]="firstName" placeholder="Enter your first name" />
+              <input id="first-name" formControlName="firstName" placeholder="Enter your first name" />
             </div>
             <div class="api-row">
               <label for="last-name">Last Name:</label>
-              <input id="last-name" [(ngModel)]="lastName" placeholder="Enter your last name" />
+              <input id="last-name" formControlName="lastName" placeholder="Enter your last name" />
             </div>
             <div class="api-row">
               <label for="email">Email:</label>
-              <input id="email" [(ngModel)]="email" placeholder="Enter your email" />
+              <input id="email" formControlName="email" placeholder="Enter your email" />
             </div>
-            <div><button (click)="submitForm()">Submit</button></div>
+            <div><button type="submit">Submit</button></div>
           </form>
         </div>
       </section>
@@ -68,25 +68,30 @@ import { FormsModule } from '@angular/forms';
   ]
 })
 export class BotPage implements OnInit {
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) {}
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
   apiKey = '';
   loading = false;
 
-  // Example form fields
-  firstName = '';
-  lastName = '';
-  email = '';
+  form!: FormGroup;
 
   submitForm() {
-    alert(`Submitted: ${this.firstName} ${this.lastName} (${this.email})`);
+    if (!this.form) return;
+    const { firstName, lastName, email } = this.form.value;
+    alert(`Submitted: ${firstName} ${lastName} (${email})`);
   }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     try { this.apiKey = this.apiKey || (localStorage.getItem('openai_api_key') || ''); } catch(e) {}
+    // initialize reactive form
+    this.form = this.fb.group({
+      firstName: [''],
+      lastName: [''],
+      email: ['', [Validators.email]]
+    });
   }
 
   sendMessage() {
