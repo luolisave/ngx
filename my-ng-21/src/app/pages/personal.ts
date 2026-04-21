@@ -46,7 +46,7 @@ export class PersonalPage implements OnInit {
   }
 
   ngOnInit(): void {
-    const existing = localStorage.getItem('openai_key');
+    const existing = localStorage.getItem('openai_api_key');
     if (existing) {
       this.form.patchValue({ openAiKey: existing });
     }
@@ -55,7 +55,7 @@ export class PersonalPage implements OnInit {
   save(): void {
     const key = this.form.get('openAiKey')?.value || '';
     try {
-      localStorage.setItem('openai_key', key);
+      localStorage.setItem('openai_api_key', key);
       this.saved = true;
       setTimeout(() => (this.saved = false), 2500);
     } catch (e) {

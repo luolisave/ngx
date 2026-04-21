@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -24,6 +24,7 @@ import { FormsModule } from '@angular/forms';
     </section>
   `,
   styles: [
+    `.api-row{display:flex;gap:0.5rem;margin-bottom:0.5rem}`,
     `:host{display:block;max-width:720px;margin:0 auto}`,
     `.chat{display:flex;flex-direction:column;gap:0.5rem;margin:1rem 0;padding:0.5rem}`,
     `.message{display:flex}`,
@@ -37,10 +38,17 @@ import { FormsModule } from '@angular/forms';
     `.empty{color:#666}`
   ]
 })
-export class BotPage {
+export class BotPage implements OnInit {
   constructor(private cdr: ChangeDetectorRef) {}
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
+  apiKey = '';
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    try { this.apiKey = this.apiKey || (localStorage.getItem('openai_api_key') || ''); } catch(e) {}
+  }
 
   sendMessage() {
     const text = (this.newMessage || '').trim();
@@ -50,13 +58,82 @@ export class BotPage {
     this.botReply(text);
   }
 
-  botReply(userText: string) {
-    const reply = this.generateReply(userText);
-    setTimeout(() => {
-      this.messages.push({ from: 'bot', text: reply });
-      this.cdr.detectChanges();
-    }, 1000);
+  async botReply(userText: string) {
+    // show a typing placeholder
+    this.messages.push({ from: 'bot', text: '...' });
+    this.cdr.detectChanges();
 
+    try {
+      const reply = await this.openAIChat(userText);
+      // replace the last bot message (the typing placeholder)
+      for (let i = this.messages.length - 1; i >= 0; i--) {
+        if (this.messages[i].from === 'bot' && this.messages[i].text === '...') {
+          this.messages[i].text = reply;
+          break;
+        }
+      }
+    } catch (err: any) {
+      const msg = err && err.message ? err.message : 'Error contacting OpenAI';
+      for (let i = this.messages.length - 1; i >= 0; i--) {
+        if (this.messages[i].from === 'bot' && this.messages[i].text === '...') {
+          this.messages[i].text = `Error: ${msg}`;
+          break;
+        }
+      }
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  async openAIChat(userText: string) {
+    // load key from localStorage if available
+    try { this.apiKey = this.apiKey || (localStorage.getItem('openai_api_key') || ''); } catch(e) {}
+
+    if (!this.apiKey) {
+      // local fallback reply if there's no API key
+      return this.generateReply(userText) + ' (local fallback — set API key to use GPT)';
+    }
+
+    const url = 'https://api.openai.com/v1/chat/completions';
+    const body = {
+      model: 'gpt-5-nano',
+      messages: [
+        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'user', content: userText }
+      ]
+    };
+
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!resp.ok) {
+      const txt = await resp.text();
+      throw new Error(`${resp.status} ${resp.statusText} - ${txt}`);
+    }
+
+    const data = await resp.json();
+    // Log full response to help debug empty content / truncation
+    try { console.log('openAI response', JSON.stringify(data, null, 2)); } catch (e) {}
+
+    const ch = Array.isArray(data?.choices) && data.choices.length ? data.choices[0] : null;
+    const maybeContent = ch?.message?.content ?? ch?.text ?? (ch?.delta && ch.delta.content) ?? '';
+
+    if (!maybeContent) {
+      // If the model was truncated, provide a helpful message instead of failing silently
+      if (ch?.finish_reason === 'length') {
+        const partial = (ch?.message?.content || ch?.text || '').trim();
+        return (partial || 'Response truncated by token limit') + ' (truncated)';
+      }
+      throw new Error('No response from model');
+    }
+
+    return String(maybeContent).trim();
   }
 
   generateReply(userText: string) {
