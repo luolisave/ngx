@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-contact',
@@ -31,12 +31,20 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
   ]
 })
 export class ContactPage {
-  form = this.fb.group({
-    name: [''],
-    message: ['']
-  });
+  form: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      name: [''],
+      message: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+
+  }
 
   onSubmit() {
     // Placeholder: intentionally non-functional. Replace with real handler if desired.
