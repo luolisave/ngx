@@ -6,27 +6,54 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <section class="chat-wrap">
-      <h1>Bot</h1>
-      <div class="chat" *ngIf="messages.length; else empty">
-        <div *ngFor="let m of messages" class="message" [class.user]="m.from==='user'" [class.bot]="m.from==='bot'">
-          <div class="bubble">{{ m.text }}</div>
-        </div>
-      </div>
-      <ng-template #empty>
-        <p class="empty">Say hi — I'll reply!</p>
-      </ng-template>
+    <div class="bot-page-wrap">
+      <section class="business-wrap">
+        <h1>Business</h1>
+        <p>Here is an example form, you can enter your information here:</p>
 
-      <div class="input-row">
-        <input [disabled]="loading" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
-        <button [disabled]="loading" (click)="sendMessage()">Send</button>
-      </div>
-    </section>
+        <div>
+          <form>
+            <div class="api-row">
+              <label for="first-name">First Name:</label>
+              <input id="first-name" [(ngModel)]="firstName" placeholder="Enter your first name" />
+            </div>
+            <div class="api-row">
+              <label for="last-name">Last Name:</label>
+              <input id="last-name" [(ngModel)]="lastName" placeholder="Enter your last name" />
+            </div>
+            <div class="api-row">
+              <label for="email">Email:</label>
+              <input id="email" [(ngModel)]="email" placeholder="Enter your email" />
+            </div>
+            <div><button (click)="submitForm()">Submit</button></div>
+          </form>
+        </div>
+      </section>
+      <section class="chat-wrap">
+        <h1>Bot</h1>
+        <div class="chat" *ngIf="messages.length; else empty">
+          <div *ngFor="let m of messages" class="message" [class.user]="m.from==='user'" [class.bot]="m.from==='bot'">
+            <div class="bubble">{{ m.text }}</div>
+          </div>
+        </div>
+        <ng-template #empty>
+          <p class="empty">Say hi — I'll reply!</p>
+        </ng-template>
+
+        <div class="input-row">
+          <input [disabled]="loading" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
+          <button [disabled]="loading" (click)="sendMessage()">Send</button>
+        </div>
+      </section>
+    </div>
   `,
   styles: [
     `.api-row{display:flex;gap:0.5rem;margin-bottom:0.5rem}`,
-    `:host{display:block;max-width:720px;margin:0 auto}`,
-    `.chat{display:flex;flex-direction:column;gap:0.5rem;margin:1rem 0;padding:0.5rem}`,
+    `:host{display:block;margin:0 auto;padding:1rem}`,
+    `.bot-page-wrap{display:grid;grid-template-columns:2fr 1fr;gap:1rem;align-items:start}`,
+    `.business-wrap{padding:1rem;border:1px solid #eee;border-radius:8px;background:#fafafa}`,
+    `.chat-wrap{padding:1rem;border:1px solid #eee;border-radius:8px;background:#fff}`,
+    `.chat{display:flex;flex-direction:column;gap:0.5rem;margin:0.5rem 0;padding:0.5rem;overflow:auto;max-height:60vh}`,
     `.message{display:flex}`,
     `.message.user{justify-content:flex-end}`,
     `.message.bot{justify-content:flex-start}`,
@@ -46,6 +73,15 @@ export class BotPage implements OnInit {
   newMessage = '';
   apiKey = '';
   loading = false;
+
+  // Example form fields
+  firstName = '';
+  lastName = '';
+  email = '';
+
+  submitForm() {
+    alert(`Submitted: ${this.firstName} ${this.lastName} (${this.email})`);
+  }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
@@ -148,9 +184,6 @@ export class BotPage implements OnInit {
 
   generateReply(userText: string) {
     const t = userText.toLowerCase();
-    if (t.includes('hello') || t.includes('hi')) return 'Hello! How can I help you today?';
-    if (t.includes('help')) return 'Sure — tell me what you need help with.';
-    if (t.includes('time')) return `The time is ${new Date().toLocaleTimeString()}.`;
     return `You said: "${userText}"`;
   }
 }
