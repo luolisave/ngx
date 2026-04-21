@@ -2,6 +2,10 @@ import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+const MODEL = 'gpt-5-nano';
+const SYSTEM_PROMPT = 'You are a helpful assistant. Your job is help user input information into a web form.';
+
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
@@ -145,11 +149,11 @@ export class BotPage implements OnInit {
       return this.generateReply(userText) + ' (local fallback — set API key to use GPT)';
     }
 
-    const url = 'https://api.openai.com/v1/chat/completions';
+    const url = OPENAI_API_URL;
     const body = {
-      model: 'gpt-5-nano',
+      model: MODEL,
       messages: [
-        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userText }
       ]
     };

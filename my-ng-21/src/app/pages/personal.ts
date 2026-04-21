@@ -12,8 +12,13 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
       <form [formGroup]="form" (ngSubmit)="save()" class="form">
         <label class="field">
-          <div class="label">Open AI KEY</div>
+          <div class="label">Open AI KEY (openai_api_key)</div>
           <input style="width: 50px;" formControlName="openAiKey" placeholder="sk-..." />
+        </label>
+
+        <label class="field" style="padding-top: 10px">
+          <div class="label">Private info (private_info)</div>
+          <textarea formControlName="privateInfo" rows="30" placeholder="This won't be saved"></textarea>
         </label>
 
         <div class="actions">
@@ -41,21 +46,28 @@ export class PersonalPage implements OnInit {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      openAiKey: ['']
+      openAiKey: [''],
+      privateInfo: ''
     });
   }
 
   ngOnInit(): void {
-    const existing = localStorage.getItem('openai_api_key');
-    if (existing) {
-      this.form.patchValue({ openAiKey: existing });
+    const openAiKey = localStorage.getItem('openai_api_key');
+    const privateInfo = localStorage.getItem('private_info');
+    if (openAiKey) {
+      this.form.patchValue({ openAiKey });
+    }
+    if (privateInfo) {
+      this.form.patchValue({ privateInfo });
     }
   }
 
   save(): void {
     const key = this.form.get('openAiKey')?.value || '';
+    const privateInfo = this.form.get('privateInfo')?.value || '';
     try {
       localStorage.setItem('openai_api_key', key);
+      localStorage.setItem('private_info', privateInfo);
       this.saved = true;
       setTimeout(() => (this.saved = false), 2500);
     } catch (e) {
