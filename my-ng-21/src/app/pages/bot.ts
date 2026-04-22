@@ -5,10 +5,12 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = 'gpt-5-nano';
 const SYSTEM_PROMPT =
-  `You are a helpful assistant. Your job is help user input information into a web form.
+  `You are a helpful assistant.
+   Your job is help user input information into a web form.
    This Form have three fields: first name, last name and email.
    You should use given tools to set the value of each field based on the user's input.
    If you don't have enough information to fill a field, input an empty string.
+   Only fill form when user ask you to do so.
   `;
 const TOOLS = [
   {
@@ -247,21 +249,26 @@ export class BotPage implements OnInit {
 
     console.log('maybetoolCalls', maybeToolCalls);
     if (maybeToolCalls.length) {
+      const tool_calls_stat = []; // TODO: give it back to model to help it learn which tool calls are successful
       for (const call of maybeToolCalls) {
         if (call.function.name === 'setFirstName') {
           const firstName = JSON.parse(call.function.arguments).firstName || '';
           this.form.patchValue({ firstName });
+          tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
           console.log('First name set to:', firstName);
         } else if (call.function.name === 'setLastName') {
           const lastName = JSON.parse(call.function.arguments).lastName || '';
           this.form.patchValue({ lastName });
+          tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
           console.log('Last name set to:', lastName);
         } else if (call.function.name === 'setEmail') {
           const email = JSON.parse(call.function.arguments).email || '';
           this.form.patchValue({ email });
+          tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
           console.log('Email set to:', email);
         }
       }
+      console.log('tool_calls_stat: ', tool_calls_stat);
       return 'Form updated based on your input!';
     } else if (!maybeContent) {
       // If the model was truncated, provide a helpful message instead of failing silently
