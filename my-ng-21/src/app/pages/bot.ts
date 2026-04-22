@@ -141,6 +141,7 @@ export class BotPage implements OnInit {
   apiKey = '';
   loading = false;
   userPrivateInfo = '';
+  history: Array<{ role: string; content: string; tool_call_id?: string, tool_calls?: any[] }> = [];
 
   form!: FormGroup;
 
@@ -217,22 +218,11 @@ export class BotPage implements OnInit {
 
     const url = OPENAI_API_URL;
 
-    // include prior conversation so the model remembers context
-    const history = (this.messages || []).map(m => ({
-      role: m.from === 'user' ? 'user' : 'assistant',
-      content: m.text
-    })).filter(m => m.content && m.content !== '...');
-
-    // avoid duplicating the latest user message (it was already pushed into `this.messages`)
-    if (history.length && history[history.length - 1].role === 'user' && history[history.length - 1].content === userText) {
-      history.pop();
-    }
-
     const body = {
       model: MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT + " \n\n User Private Info: " + this.userPrivateInfo + "\n\n" },
-        ...history,
+        ...this.history,
         { role: 'user', content: userText }
       ],
       tools: TOOLS
@@ -246,6 +236,8 @@ export class BotPage implements OnInit {
       },
       body: JSON.stringify(body)
     });
+
+    this.history.push({ role: 'user', content: userText });
 
     if (!resp.ok) {
       const txt = await resp.text();
@@ -263,27 +255,26 @@ export class BotPage implements OnInit {
     // tool calls
     console.log('maybetoolCalls', maybeToolCalls);
     if (maybeToolCalls.length) {
-      const tool_calls_stat = []; // TODO: give it back to model to help it learn which tool calls are successful
+      this.history.push({ role: "assistant", content: "", tool_calls: maybeToolCalls });
       for (const call of maybeToolCalls) {
         if (call.function.name === 'setFirstName') {
           const firstName = JSON.parse(call.function.arguments).firstName || '';
           this.form.patchValue({ firstName });
-          tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
+          this.history.push({ role: "tool", tool_call_id: call.id, content: "success" });
           console.log('tool executed: First name set to:', firstName);
         } else if (call.function.name === 'setLastName') {
           const lastName = JSON.parse(call.function.arguments).lastName || '';
           this.form.patchValue({ lastName });
-          tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
+          this.history.push({ role: "tool", tool_call_id: call.id, content: "success" });
           console.log('tool executed: Last name set to:', lastName);
         } else if (call.function.name === 'setEmail') {
           const email = JSON.parse(call.function.arguments).email || '';
           this.form.patchValue({ email });
-          tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
+          this.history.push({ role: "tool", tool_call_id: call.id, content: "success" });
           console.log('tool executed: Email set to:', email);
         }
       }
-      console.log('tool_calls_stat: ', tool_calls_stat);
-      return 'Form updated based on your input!';
+      return 'tool executed ends: Form updated based on your input!';
     } else if (!maybeContent) {
       // If the model was truncated, provide a helpful message instead of failing silently
       if (ch?.finish_reason === 'length') {
