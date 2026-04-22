@@ -4,7 +4,68 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const MODEL = 'gpt-5-nano';
-const SYSTEM_PROMPT = 'You are a helpful assistant. Your job is help user input information into a web form.';
+const SYSTEM_PROMPT =
+  `You are a helpful assistant. Your job is help user input information into a web form.
+   This Form have three fields: first name, last name and email.
+   You should use given tools to set the value of each field based on the user's input.
+   If you don't have enough information to fill a field, input an empty string.
+  `;
+const TOOLS = [
+  {
+    "type": "function",
+    "function": {
+      "name": "setFirstName",
+      "description": "Set the user's first name",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "The user's first name"
+          }
+        },
+        "required": ["firstName"],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "setLastName",
+      "description": "Set the user's last name",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "lastName": {
+            "type": "string",
+            "description": "The user's last name"
+          }
+        },
+        "required": ["lastName"],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "setEmail",
+      "description": "Set the user's email",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The user's email"
+          }
+        },
+        "required": ["email"],
+        "additionalProperties": false
+      }
+    }
+  }
+]
 
 @Component({
   standalone: true,
@@ -26,7 +87,7 @@ const SYSTEM_PROMPT = 'You are a helpful assistant. Your job is help user input 
               <input id="last-name" formControlName="lastName" placeholder="Enter your last name" />
             </div>
             <div class="api-row">
-              <label for="email">Email:</label>
+              <label for="email">Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
               <input id="email" formControlName="email" placeholder="Enter your email" />
             </div>
             <div><button type="submit">Submit</button></div>
@@ -77,6 +138,7 @@ export class BotPage implements OnInit {
   newMessage = '';
   apiKey = '';
   loading = false;
+  userPrivateInfo = '';
 
   form!: FormGroup;
 
@@ -96,6 +158,8 @@ export class BotPage implements OnInit {
       lastName: [''],
       email: ['', [Validators.email]]
     });
+
+    this.userPrivateInfo = localStorage.getItem('private_info') || '';
   }
 
   sendMessage() {
@@ -153,9 +217,10 @@ export class BotPage implements OnInit {
     const body = {
       model: MODEL,
       messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: SYSTEM_PROMPT + " \n\n User Private Info: " + this.userPrivateInfo + "\n\n" },
         { role: 'user', content: userText }
-      ]
+      ],
+      tools: TOOLS
     };
 
     const resp = await fetch(url, {
@@ -178,8 +243,27 @@ export class BotPage implements OnInit {
 
     const ch = Array.isArray(data?.choices) && data.choices.length ? data.choices[0] : null;
     const maybeContent = ch?.message?.content ?? ch?.text ?? (ch?.delta && ch.delta.content) ?? '';
+    const maybeToolCalls = ch?.message?.tool_calls ?? ch?.tool_calls ?? [];
 
-    if (!maybeContent) {
+    console.log('maybetoolCalls', maybeToolCalls);
+    if (maybeToolCalls.length) {
+      for (const call of maybeToolCalls) {
+        if (call.function.name === 'setFirstName') {
+          const firstName = JSON.parse(call.function.arguments).firstName || '';
+          this.form.patchValue({ firstName });
+          console.log('First name set to:', firstName);
+        } else if (call.function.name === 'setLastName') {
+          const lastName = JSON.parse(call.function.arguments).lastName || '';
+          this.form.patchValue({ lastName });
+          console.log('Last name set to:', lastName);
+        } else if (call.function.name === 'setEmail') {
+          const email = JSON.parse(call.function.arguments).email || '';
+          this.form.patchValue({ email });
+          console.log('Email set to:', email);
+        }
+      }
+      return 'Form updated based on your input!';
+    } else if (!maybeContent) {
       // If the model was truncated, provide a helpful message instead of failing silently
       if (ch?.finish_reason === 'length') {
         const partial = (ch?.message?.content || ch?.text || '').trim();
