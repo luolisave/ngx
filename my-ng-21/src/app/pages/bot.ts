@@ -216,10 +216,23 @@ export class BotPage implements OnInit {
     }
 
     const url = OPENAI_API_URL;
+
+    // include prior conversation so the model remembers context
+    const history = (this.messages || []).map(m => ({
+      role: m.from === 'user' ? 'user' : 'assistant',
+      content: m.text
+    })).filter(m => m.content && m.content !== '...');
+
+    // avoid duplicating the latest user message (it was already pushed into `this.messages`)
+    if (history.length && history[history.length - 1].role === 'user' && history[history.length - 1].content === userText) {
+      history.pop();
+    }
+
     const body = {
       model: MODEL,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT + " \n\n User Private Info: " + this.userPrivateInfo + "\n\n" },
+        ...history,
         { role: 'user', content: userText }
       ],
       tools: TOOLS
@@ -247,6 +260,7 @@ export class BotPage implements OnInit {
     const maybeContent = ch?.message?.content ?? ch?.text ?? (ch?.delta && ch.delta.content) ?? '';
     const maybeToolCalls = ch?.message?.tool_calls ?? ch?.tool_calls ?? [];
 
+    // tool calls
     console.log('maybetoolCalls', maybeToolCalls);
     if (maybeToolCalls.length) {
       const tool_calls_stat = []; // TODO: give it back to model to help it learn which tool calls are successful
@@ -255,17 +269,17 @@ export class BotPage implements OnInit {
           const firstName = JSON.parse(call.function.arguments).firstName || '';
           this.form.patchValue({ firstName });
           tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
-          console.log('First name set to:', firstName);
+          console.log('tool executed: First name set to:', firstName);
         } else if (call.function.name === 'setLastName') {
           const lastName = JSON.parse(call.function.arguments).lastName || '';
           this.form.patchValue({ lastName });
           tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
-          console.log('Last name set to:', lastName);
+          console.log('tool executed: Last name set to:', lastName);
         } else if (call.function.name === 'setEmail') {
           const email = JSON.parse(call.function.arguments).email || '';
           this.form.patchValue({ email });
           tool_calls_stat.push({"role": "tool", "tool_call_id": call.id, "content": "{\"success\": true}"});
-          console.log('Email set to:', email);
+          console.log('tool executed: Email set to:', email);
         }
       }
       console.log('tool_calls_stat: ', tool_calls_stat);
