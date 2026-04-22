@@ -1,2 +1,2 @@
 # ngx
-Angular 7+ test bench
+Angular 21+ test bench
