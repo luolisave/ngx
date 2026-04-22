@@ -9,7 +9,8 @@ const SYSTEM_PROMPT =
    Your job is help user input information into a web form.
    This Form have three fields: first name, last name and email.
    You should use given tools to set the value of each field based on the user's input.
-   If you don't have enough information to fill a field, input an empty string.
+   If tool call(s) failed, ask user if they want try again.
+   If you don't have enough information to fill a field, fill others first, then ask user for the missing information.
    Only fill form when user ask you to do so.
   `;
 const TOOLS = [
@@ -184,7 +185,15 @@ export class BotPage implements OnInit {
     this.loading = true;
 
     try {
-      const reply = await this.openAIChat(userText);
+      let reply = '';
+      while (reply.startsWith('tool executed') || !reply) {
+        if (reply.startsWith('tool executed')) {
+          reply = await this.openAIChat('');
+        } else if (!reply) {
+          reply = await this.openAIChat(userText);
+        }
+
+      }
       // replace the last bot message (the typing placeholder)
       for (let i = this.messages.length - 1; i >= 0; i--) {
         if (this.messages[i].from === 'bot' && this.messages[i].text === '...') {
@@ -223,10 +232,12 @@ export class BotPage implements OnInit {
       messages: [
         { role: 'system', content: SYSTEM_PROMPT + " \n\n User Private Info: " + this.userPrivateInfo + "\n\n" },
         ...this.history,
-        { role: 'user', content: userText }
       ],
       tools: TOOLS
     };
+    if (userText) {
+      body.messages.push({ role: 'user', content: userText });
+    }
 
     const resp = await fetch(url, {
       method: 'POST',
@@ -274,7 +285,7 @@ export class BotPage implements OnInit {
           console.log('tool executed: Email set to:', email);
         }
       }
-      return 'tool executed ends: Form updated based on your input!';
+      return 'tool executed: Form updated based on your input!';
     } else if (!maybeContent) {
       // If the model was truncated, provide a helpful message instead of failing silently
       if (ch?.finish_reason === 'length') {
@@ -282,6 +293,8 @@ export class BotPage implements OnInit {
         return (partial || 'Response truncated by token limit') + ' (truncated)';
       }
       throw new Error('No response from model');
+    } else if (maybeContent) {
+      this.history.push({ role: 'assistant', content: maybeContent });
     }
 
     return String(maybeContent).trim();
@@ -289,6 +302,6 @@ export class BotPage implements OnInit {
 
   generateReply(userText: string) {
     const t = userText.toLowerCase();
-    return `You said: "${userText}"`;
+    return `No OpenAI key found. \nYou said: "${userText}"`;
   }
 }
