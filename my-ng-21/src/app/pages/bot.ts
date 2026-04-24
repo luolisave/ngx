@@ -216,7 +216,7 @@ const TOOLS = [
     `.bubble{max-width:80%;padding:0.5rem 0.75rem;border-radius:12px;background:#f1f1f1}`,
     `.message.user .bubble{background:#0366d6;color:white}`,
     `.input-row{display:flex;gap:0.5rem;margin-top:0.75rem}`,
-    `input{flex:1;padding:0.5rem;border:1px solid #ddd;border-radius:6px}`,
+    `input, select{flex:1;padding:0.5rem;border:1px solid #ddd;border-radius:6px}`,
     `input:disabled{opacity:0.6;cursor:not-allowed;background:#f7f7f7}`,
     `button{padding:0.5rem 0.75rem;border:none;background:#0366d6;color:#fff;border-radius:6px}`,
     `button:disabled{opacity:0.6;cursor:not-allowed;background:#999;color:#eee}`,
