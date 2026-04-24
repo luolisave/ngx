@@ -7,7 +7,11 @@ const MODEL = 'gpt-5-nano';
 const SYSTEM_PROMPT =
   `You are a helpful assistant.
    Your job is help user input information into a web form.
-   This Form have three fields: first name, last name and email.
+   This Form have several fields: first name, last name, email, from account, to account and amount.
+     - first name, last name and email are user's private information, you should ask user to fill them first if you don't have them, and never ask for them again after you got them.
+     - account can only be in following format: "chequing - 1234" or "savings - 5678", or "credit - 9123"
+     - fill the account and amount information if there is enough instruction in user private info or user's message, otherwise ask user for the missing information.
+     - from account, to account and amount are related to the transaction user want to make, you can ask for them in any order, and you can ask for them multiple times if needed.
    You should use given tools to set the value of each field based on the user's input.
    If tool call(s) failed, ask user if they want try again.
    If you don't have enough information to fill a field, fill others first, then ask user for the missing information.
@@ -67,6 +71,60 @@ const TOOLS = [
         "additionalProperties": false
       }
     }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "setFromAccount",
+      "description": "Set the user's from account",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "fromAccount": {
+            "type": "string",
+            "description": "The user's from account"
+          }
+        },
+        "required": ["fromAccount"],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "setToAccount",
+      "description": "Set the user's to account",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "toAccount": {
+            "type": "string",
+            "description": "The user's to account"
+          }
+        },
+        "required": ["toAccount"],
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "setAmount",
+      "description": "Set the user's amount",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string",
+            "description": "The user's amount"
+          }
+        },
+        "required": ["amount"],
+        "additionalProperties": false
+      }
+    }
   }
 ]
 
@@ -92,6 +150,19 @@ const TOOLS = [
             <div class="api-row">
               <label for="email">Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
               <input id="email" formControlName="email" placeholder="Enter your email" />
+            </div>
+            <hr />
+            <div class="api-row">
+              <label for="from-account">From Account:</label>
+              <input id="from-account" formControlName="fromAccount" placeholder="Enter your account" />
+            </div>
+            <div class="api-row">
+              <label for="to-account">To Account:</label>
+              <input id="to-account" formControlName="toAccount" placeholder="Enter your account" />
+            </div>
+            <div class="api-row">
+              <label for="amount">Amount:</label>
+              <input id="amount" formControlName="amount" placeholder="Enter your amount" />
             </div>
             <div><button type="submit">Submit</button></div>
           </form>
@@ -160,7 +231,10 @@ export class BotPage implements OnInit {
     this.form = this.fb.group({
       firstName: [''],
       lastName: [''],
-      email: ['', [Validators.email]]
+      email: ['', [Validators.email]],
+      fromAccount: [''],
+      toAccount: [''],
+      amount: ['']
     });
 
     this.userPrivateInfo = localStorage.getItem('private_info') || '';
@@ -283,6 +357,21 @@ export class BotPage implements OnInit {
           this.form.patchValue({ email });
           this.history.push({ role: "tool", tool_call_id: call.id, content: "success" });
           console.log('tool executed: Email set to:', email);
+        } else if (call.function.name === 'setFromAccount') {
+          const fromAccount = JSON.parse(call.function.arguments).fromAccount || '';
+          this.form.patchValue({ fromAccount });
+          this.history.push({ role: "tool", tool_call_id: call.id, content: "success" });
+          console.log('tool executed: From account set to:', fromAccount);
+        } else if (call.function.name === 'setToAccount') {
+          const toAccount = JSON.parse(call.function.arguments).toAccount || '';
+          this.form.patchValue({ toAccount });
+          this.history.push({ role: "tool", tool_call_id: call.id, content: "success" });
+          console.log('tool executed: To account set to:', toAccount);
+        } else if (call.function.name === 'setAmount') {
+          const amount = JSON.parse(call.function.arguments).amount || '';
+          this.form.patchValue({ amount });
+          this.history.push({ role: "tool", tool_call_id: call.id, content: "success" });
+          console.log('tool executed: Amount set to:', amount);
         }
       }
       return 'tool executed: Form updated based on your input!';
