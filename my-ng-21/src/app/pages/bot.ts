@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const OLLAMA_API_URL = 'http://localhost:11434/v1/chat/completions';
-const OPENAI_MODEL = 'gpt-5-nano';
+const OPENAI_MODEL = 'gpt-5.4-nano';
 const OLLAMA_MODEL = 'gemma4:e4b';
 const SYSTEM_PROMPT =
   `You are a helpful assistant.
