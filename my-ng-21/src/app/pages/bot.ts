@@ -2,8 +2,11 @@ import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+const USE_OLLAMA = false; // set to true to use Ollama instead of OpenAI (for local testing with a local model)
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-const MODEL = 'gpt-5-nano';
+const OLLAMA_API_URL = 'http://localhost:11434/v1/chat/completions';
+const OPENAI_MODEL = 'gpt-5-nano';
+const OLLAMA_MODEL = 'gemma4:e4b';
 const SYSTEM_PROMPT =
   `You are a helpful assistant.
    Your job is help user input information into a web form.
@@ -307,10 +310,11 @@ export class BotPage implements OnInit {
       return this.generateReply(userText) + ' (local fallback — set API key to use GPT)';
     }
 
-    const url = OPENAI_API_URL;
+    const url = USE_OLLAMA ?  OLLAMA_API_URL : OPENAI_API_URL;
+    const model = USE_OLLAMA ? OLLAMA_MODEL : OPENAI_MODEL;
 
     const body = {
-      model: MODEL,
+      model: model,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT + " \n\n User Private Info: " + this.userPrivateInfo + "\n\n" },
         ...this.history,
