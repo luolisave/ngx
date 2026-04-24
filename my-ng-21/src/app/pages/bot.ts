@@ -9,7 +9,7 @@ const SYSTEM_PROMPT =
    Your job is help user input information into a web form.
    This Form have several fields: first name, last name, email, from account, to account and amount.
      - first name, last name and email are user's private information, you should ask user to fill them first if you don't have them, and never ask for them again after you got them.
-     - account can only be in following format: "chequing - 1234" or "savings - 5678", or "credit - 9123"
+     - account can only be in following value: chequing :"1234" or savings: "5678", or credit: "9999"
      - fill the account and amount information if there is enough instruction in user private info or user's message, otherwise ask user for the missing information.
      - from account, to account and amount are related to the transaction user want to make, you can ask for them in any order, and you can ask for them multiple times if needed.
    You should use given tools to set the value of each field based on the user's input.
@@ -154,11 +154,19 @@ const TOOLS = [
             <hr />
             <div class="api-row">
               <label for="from-account">From Account:</label>
-              <input id="from-account" formControlName="fromAccount" placeholder="Enter your account" />
+              <select id="from-account" formControlName="fromAccount">
+                <option value="1234">chequing account</option>
+                <option value="5678">saving account</option>
+                <option value="9999">credit account</option>
+              </select>
             </div>
             <div class="api-row">
               <label for="to-account">To Account:</label>
-              <input id="to-account" formControlName="toAccount" placeholder="Enter your account" />
+              <select id="to-account" formControlName="toAccount">
+                <option value="1234">chequing account</option>
+                <option value="5678">saving account</option>
+                <option value="9999">credit card</option>
+              </select>
             </div>
             <div class="api-row">
               <label for="amount">Amount:</label>
