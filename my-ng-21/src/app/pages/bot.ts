@@ -2,7 +2,6 @@ import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-const USE_OLLAMA = false; // set to true to use Ollama instead of OpenAI (for local testing with a local model)
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const OLLAMA_API_URL = 'http://localhost:11434/v1/chat/completions';
 const OPENAI_MODEL = 'gpt-5-nano';
@@ -181,6 +180,13 @@ const TOOLS = [
       </section>
       <section class="chat-wrap">
         <h1>Bot</h1>
+        <div>
+          <label for="api-key">API provider:</label>
+          <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_OLLAMA" [value]="true">
+          <label for="ollama">Ollama gemma4:e4b (local)</label>
+          <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_OLLAMA" [value]="false">
+          <label for="openai">OpenAI gpt-5-nano (cloud)</label>
+        </div>
         <div class="chat" *ngIf="messages.length; else empty">
           <div *ngFor="let m of messages" class="message" [class.user]="m.from==='user'" [class.bot]="m.from==='bot'">
             <div class="bubble">{{ m.text }}</div>
@@ -219,6 +225,9 @@ const TOOLS = [
 })
 export class BotPage implements OnInit {
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) {}
+
+  USE_OLLAMA = false; // set to true to use Ollama instead of OpenAI (for local testing with a local model)
+
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
   apiKey = '';
@@ -310,8 +319,8 @@ export class BotPage implements OnInit {
       return this.generateReply(userText) + ' (local fallback — set API key to use GPT)';
     }
 
-    const url = USE_OLLAMA ?  OLLAMA_API_URL : OPENAI_API_URL;
-    const model = USE_OLLAMA ? OLLAMA_MODEL : OPENAI_MODEL;
+    const url = this.USE_OLLAMA ?  OLLAMA_API_URL : OPENAI_API_URL;
+    const model = this.USE_OLLAMA ? OLLAMA_MODEL : OPENAI_MODEL;
 
     const body = {
       model: model,
