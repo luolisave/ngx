@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const OLLAMA_API_URL = 'http://localhost:11434/v1/chat/completions';
 const OPENAI_MODEL = 'gpt-5.4-nano';
-const OLLAMA_MODEL = 'gemma4:e4b';
+const OLLAMA_MODEL = 'gemma4:e2b';
 const SYSTEM_PROMPT =
   `You are a helpful assistant.
    Your job is help user input information into a web form.
@@ -181,11 +181,23 @@ const TOOLS = [
       <section class="chat-wrap">
         <h1>Bot</h1>
         <div>
-          <label for="api-key">API provider:</label>
+          <label for="api-key">API provider:</label><br />
           <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_OLLAMA" [value]="true">
           <label for="ollama">Ollama gemma4:e4b (local)</label>
           <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_OLLAMA" [value]="false">
-          <label for="openai">OpenAI gpt-5-nano (cloud)</label>
+          <label for="openai">OpenAI gpt-5.4-nano (cloud)</label>
+        </div>
+        <div *ngIf="USE_OLLAMA" style="margin-top: 0.5rem;">
+          <label>Select Your Ollama Model</label><br />
+          <select [(ngModel)]="OLLAMA_MODEL_NAME">
+            <option value="gemma4:e2b">gemma4:e2b - 7.2GB</option>
+            <option value="gemma4:e4b">gemma4:e4b - 9.6GB</option>
+            <option value="gemma4:latest">gemma4:latest (e4b) - 9.6GB</option>
+
+            <option value="qwen3.5:2b">qwen3.5:2b - 2.7GB</option>
+            <option value="qwen3.5:4b">qwen3.5:4b - 3.4GB</option>
+            <option value="qwen3.5:latest">qwen3.5:latest (9b) - 6.6GB</option>
+          </select>
         </div>
         <div class="chat" *ngIf="messages.length; else empty">
           <div *ngFor="let m of messages" class="message" [class.user]="m.from==='user'" [class.bot]="m.from==='bot'">
@@ -227,6 +239,7 @@ export class BotPage implements OnInit {
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) {}
 
   USE_OLLAMA = false; // set to true to use Ollama instead of OpenAI (for local testing with a local model)
+  OLLAMA_MODEL_NAME = 'gemma4:e2b';
 
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
@@ -320,7 +333,11 @@ export class BotPage implements OnInit {
     }
 
     const url = this.USE_OLLAMA ?  OLLAMA_API_URL : OPENAI_API_URL;
-    const model = this.USE_OLLAMA ? OLLAMA_MODEL : OPENAI_MODEL;
+    let model = this.USE_OLLAMA ? OLLAMA_MODEL : OPENAI_MODEL;
+    if (this.USE_OLLAMA && this.OLLAMA_MODEL_NAME) {
+      model = this.OLLAMA_MODEL_NAME;
+    }
+    console.log(' Using Ollama:', this.USE_OLLAMA, 'Using model:', model);
 
     const body = {
       model: model,
