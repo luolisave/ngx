@@ -182,12 +182,12 @@ const TOOLS = [
         <h1>Bot</h1>
         <div>
           <label for="api-key">API provider:</label><br />
-          <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_OLLAMA" [value]="true">
+          <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
           <label for="ollama">Ollama gemma4:e4b (local)</label>
-          <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_OLLAMA" [value]="false">
+          <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OPENAI'">
           <label for="openai">OpenAI gpt-5.4-nano (cloud)</label>
         </div>
-        <div *ngIf="USE_OLLAMA" style="margin-top: 0.5rem;">
+        <div *ngIf="USE_PLATFORM === 'OLLAMA'" style="margin-top: 0.5rem;">
           <label>Select Your Ollama Model</label><br />
           <select [(ngModel)]="OLLAMA_MODEL_NAME">
             <option value="gemma4:e2b">gemma4:e2b - 7.2GB</option>
@@ -238,8 +238,10 @@ const TOOLS = [
 export class BotPage implements OnInit {
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) {}
 
-  USE_OLLAMA = false; // set to true to use Ollama instead of OpenAI (for local testing with a local model)
+  USE_PLATFORM = "OPENAI"; // set to "OLLAMA" to use Ollama instead of OpenAI (for local testing with a local model)
   OLLAMA_MODEL_NAME = 'gemma4:e2b';
+
+  LLM_STUDIO_API_URL = 'http://localhost:1234/v1';
 
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
@@ -332,12 +334,12 @@ export class BotPage implements OnInit {
       return this.generateReply(userText) + ' (local fallback — set API key to use GPT)';
     }
 
-    const url = this.USE_OLLAMA ?  OLLAMA_API_URL : OPENAI_API_URL;
-    let model = this.USE_OLLAMA ? OLLAMA_MODEL : OPENAI_MODEL;
-    if (this.USE_OLLAMA && this.OLLAMA_MODEL_NAME) {
+    const url = this.USE_PLATFORM === 'OLLAMA' ?  OLLAMA_API_URL : OPENAI_API_URL;
+    let model = this.USE_PLATFORM === 'OLLAMA' ? OLLAMA_MODEL : OPENAI_MODEL;
+    if (this.USE_PLATFORM === 'OLLAMA' && this.OLLAMA_MODEL_NAME) {
       model = this.OLLAMA_MODEL_NAME;
     }
-    console.log(' Using Ollama:', this.USE_OLLAMA, 'Using model:', model);
+    console.log(' Using Ollama:', this.USE_PLATFORM === 'OLLAMA', 'Using model:', model);
 
     const body = {
       model: model,
