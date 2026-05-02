@@ -6,8 +6,6 @@ const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const OLLAMA_API_URL = 'http://localhost:11434/v1/chat/completions';
 const LM_STUDIO_API_URL = 'http://localhost:1234/v1/chat/completions';
 const OPENAI_MODEL = 'gpt-5.4-nano';
-const OLLAMA_MODEL = 'gemma4:e2b';
-const LM_STUDIO_MODEL = 'gemma4:e2b';
 const SYSTEM_PROMPT =
   `You are a helpful assistant.
    Your job is help user input information into a web form.
@@ -186,14 +184,15 @@ const TOOLS = [
           <label for="api-key">API provider:</label><br />
           <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OPENAI'">
           <label for="openai">OpenAI gpt-5.4-nano (cloud)</label>><br />
-          <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
-          <label for="ollama">Ollama gemma4:e4b (local)</label><br />
           <input type="radio" id="lm-studio" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'LM_STUDIO'">
-          <label for="lm-studio">LM Studio (local)</label>
+          <label for="lm-studio">LM Studio (local)</label><br />
+          <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
+          <label for="ollama">Ollama</label><br />
         </div>
         <div *ngIf="USE_PLATFORM === 'OLLAMA'" style="margin-top: 0.5rem;">
           <label>Select Your Ollama Model</label><br />
           <select [(ngModel)]="OLLAMA_MODEL_NAME">
+            <option value="gemma4:31b-cloud">gemma4:31b-cloud (cloud)</option>
             <option value="gemma4:e2b">gemma4:e2b - 7.2GB</option>
             <option value="gemma4:e4b">gemma4:e4b - 9.6GB</option>
             <option value="gemma4:latest">gemma4:latest (e4b) - 9.6GB</option>
@@ -248,11 +247,11 @@ const TOOLS = [
 export class BotPage implements OnInit {
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder) {}
 
-  USE_PLATFORM = "OPENAI"; // set to "OLLAMA" to use Ollama instead of OpenAI (for local testing with a local model)
-  OLLAMA_MODEL_NAME = 'gemma4:e2b';
+  USE_PLATFORM = "OLLAMA"; // set to "OLLAMA" to use Ollama instead of OpenAI (for local testing with a local model)
+  OLLAMA_MODEL_NAME = 'gemma4:31b-cloud'; // default Ollama model to use
 
   LM_STUDIO_API_URL = 'http://localhost:1234/v1';
-  LM_STUDIO_MODEL = 'gemma4-e2b';
+  LM_STUDIO_MODEL = 'gemma4:e2b';
 
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
@@ -355,7 +354,7 @@ export class BotPage implements OnInit {
         else if (this.USE_PLATFORM === 'LM_STUDIO') return this.LM_STUDIO_MODEL;
         else return OPENAI_MODEL;
       }
-    console.log(' Using Ollama:', this.USE_PLATFORM === 'OLLAMA', 'Using model:', model);
+    console.log(' Using Ollama:', this.USE_PLATFORM === 'OLLAMA', 'Using model:', model());
 
     const body = {
       model: model(),
@@ -369,20 +368,28 @@ export class BotPage implements OnInit {
       body.messages.push({ role: 'user', content: userText });
     }
 
+    const headers: any = {
+      'Content-Type': 'application/json'
+    };
+    if (this.USE_PLATFORM === 'OPENAI') {
+      headers['Authorization'] = `Bearer ${this.apiKey}`;
+    }
+
     const resp = await fetch(url(), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`
-      },
+      headers,
       body: JSON.stringify(body)
     });
 
-    this.history.push({ role: 'user', content: userText });
+    if (userText) {
+      this.history.push({ role: 'user', content: userText });
+    }
 
     if (!resp.ok) {
       const txt = await resp.text();
-      throw new Error(`${resp.status} ${resp.statusText} - ${txt}`);
+      const errorMsg = `${resp.status} ${resp.statusText} - ${txt}`;
+      console.error('API Error:', errorMsg);
+      throw new Error(errorMsg);
     }
 
     const data = await resp.json();
