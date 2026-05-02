@@ -4,8 +4,10 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const OLLAMA_API_URL = 'http://localhost:11434/v1/chat/completions';
+const LM_STUDIO_API_URL = 'http://localhost:1234/v1/chat/completions';
 const OPENAI_MODEL = 'gpt-5.4-nano';
 const OLLAMA_MODEL = 'gemma4:e2b';
+const LM_STUDIO_MODEL = 'gemma4:e2b';
 const SYSTEM_PROMPT =
   `You are a helpful assistant.
    Your job is help user input information into a web form.
@@ -182,10 +184,12 @@ const TOOLS = [
         <h1>Bot</h1>
         <div>
           <label for="api-key">API provider:</label><br />
-          <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
-          <label for="ollama">Ollama gemma4:e4b (local)</label>
           <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OPENAI'">
-          <label for="openai">OpenAI gpt-5.4-nano (cloud)</label>
+          <label for="openai">OpenAI gpt-5.4-nano (cloud)</label>><br />
+          <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
+          <label for="ollama">Ollama gemma4:e4b (local)</label><br />
+          <input type="radio" id="lm-studio" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'LM_STUDIO'">
+          <label for="lm-studio">LM Studio (local)</label>
         </div>
         <div *ngIf="USE_PLATFORM === 'OLLAMA'" style="margin-top: 0.5rem;">
           <label>Select Your Ollama Model</label><br />
@@ -197,6 +201,12 @@ const TOOLS = [
             <option value="qwen3.5:2b">qwen3.5:2b - 2.7GB</option>
             <option value="qwen3.5:4b">qwen3.5:4b - 3.4GB</option>
             <option value="qwen3.5:latest">qwen3.5:latest (9b) - 6.6GB</option>
+          </select>
+        </div>
+        <div *ngIf="USE_PLATFORM === 'LM_STUDIO'" style="margin-top: 0.5rem;">
+          <label>Select Your LM Studio Model</label><br />
+          <select [(ngModel)]="LM_STUDIO_MODEL">
+            <option value="gemma4:e2b">gemma4:e2b - 4.2GB</option>
           </select>
         </div>
         <div class="chat" *ngIf="messages.length; else empty">
@@ -241,7 +251,8 @@ export class BotPage implements OnInit {
   USE_PLATFORM = "OPENAI"; // set to "OLLAMA" to use Ollama instead of OpenAI (for local testing with a local model)
   OLLAMA_MODEL_NAME = 'gemma4:e2b';
 
-  LLM_STUDIO_API_URL = 'http://localhost:1234/v1';
+  LM_STUDIO_API_URL = 'http://localhost:1234/v1';
+  LM_STUDIO_MODEL = 'gemma4-e2b';
 
   messages: Array<{ from: 'user' | 'bot'; text: string }> = [];
   newMessage = '';
@@ -334,15 +345,20 @@ export class BotPage implements OnInit {
       return this.generateReply(userText) + ' (local fallback — set API key to use GPT)';
     }
 
-    const url = this.USE_PLATFORM === 'OLLAMA' ?  OLLAMA_API_URL : OPENAI_API_URL;
-    let model = this.USE_PLATFORM === 'OLLAMA' ? OLLAMA_MODEL : OPENAI_MODEL;
-    if (this.USE_PLATFORM === 'OLLAMA' && this.OLLAMA_MODEL_NAME) {
-      model = this.OLLAMA_MODEL_NAME;
+    let url = () => {
+      if (this.USE_PLATFORM === 'OLLAMA') return OLLAMA_API_URL;
+      else if (this.USE_PLATFORM === 'LM_STUDIO') return LM_STUDIO_API_URL;
+      else return OPENAI_API_URL;
     }
+    let model = () => {
+        if (this.USE_PLATFORM === 'OLLAMA') return this.OLLAMA_MODEL_NAME;
+        else if (this.USE_PLATFORM === 'LM_STUDIO') return this.LM_STUDIO_MODEL;
+        else return OPENAI_MODEL;
+      }
     console.log(' Using Ollama:', this.USE_PLATFORM === 'OLLAMA', 'Using model:', model);
 
     const body = {
-      model: model,
+      model: model(),
       messages: [
         { role: 'system', content: SYSTEM_PROMPT + " \n\n User Private Info: " + this.userPrivateInfo + "\n\n" },
         ...this.history,
@@ -353,7 +369,7 @@ export class BotPage implements OnInit {
       body.messages.push({ role: 'user', content: userText });
     }
 
-    const resp = await fetch(url, {
+    const resp = await fetch(url(), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
