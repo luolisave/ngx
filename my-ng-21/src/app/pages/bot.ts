@@ -298,7 +298,6 @@ export class BotPage implements OnInit {
   async botReply(userText: string) {
     // show a typing placeholder
     this.messages.push({ from: 'bot', text: '...' });
-    this.cdr.detectChanges();
 
     // ensure loading state in case botReply is called directly
     this.loading = true;
