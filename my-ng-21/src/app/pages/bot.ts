@@ -338,7 +338,8 @@ export class BotPage implements OnInit {
     // load key from localStorage if available
     try { this.apiKey = this.apiKey || (localStorage.getItem('openai_api_key') || ''); } catch(e) {}
 
-    if (!this.apiKey) {
+    // Only OpenAI (cloud) requires an API key. Local providers (Ollama / LM Studio) don't.
+    if (this.USE_PLATFORM === 'OPENAI' && !this.apiKey) {
       // local fallback reply if there's no API key
       return this.generateReply(userText) + ' (local fallback — set API key to use GPT)';
     }
