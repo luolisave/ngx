@@ -12,11 +12,15 @@ interface Post { title: string; date: string; excerpt?: string }
       <h1>Posts</h1>
       <p>Recent posts:</p>
       <ul>
-        <li *ngFor="let p of posts">
+        @for (p of posts; track p.title) {
+        <li>
           <strong>{{ p.title }}</strong>
           <div style="color:#666;font-size:0.9rem">{{ p.date }}</div>
-          <p *ngIf="p.excerpt" style="margin-top:0.25rem">{{ p.excerpt }}</p>
+          @if (p.excerpt) {
+            <p style="margin-top:0.25rem">{{ p.excerpt }}</p>
+          }
         </li>
+      }
       </ul>
     </section>
   `,

@@ -26,7 +26,9 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
         </div>
       </form>
 
-      <p *ngIf="saved" class="saved">Key saved to localStorage.</p>
+      @if (saved) {
+        <p class="saved">Key saved to localStorage.</p>
+      }
     </section>
   `,
   styles: [

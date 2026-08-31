@@ -189,33 +189,41 @@ const TOOLS = [
           <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
           <label for="ollama">Ollama</label><br />
         </div>
-        <div *ngIf="USE_PLATFORM === 'OLLAMA'" style="margin-top: 0.5rem;">
-          <label>Select Your Ollama Model</label><br />
-          <select [(ngModel)]="OLLAMA_MODEL_NAME">
-            <option value="gemma4:31b-cloud">gemma4:31b-cloud (cloud)</option>
-            <option value="gemma4:e2b">gemma4:e2b - 7.2GB</option>
-            <option value="gemma4:e4b">gemma4:e4b - 9.6GB</option>
-            <option value="gemma4:latest">gemma4:latest (e4b) - 9.6GB</option>
+        @if (USE_PLATFORM === 'OLLAMA') {
+          <div style="margin-top: 0.5rem;">
+            <label>Select Your Ollama Model</label><br />
+            <select [(ngModel)]="OLLAMA_MODEL_NAME">
+              <option value="gemma4:31b-cloud">gemma4:31b-cloud (cloud)</option>
+              <option value="gemma4:12b">gemma4:12b</option>
+              <option value="gemma4:e2b">gemma4:e2b - 7.2GB</option>
+              <option value="gemma4:e4b">gemma4:e4b - 9.6GB</option>
+              <option value="gemma4:latest">gemma4:latest (e4b) - 9.6GB</option>
 
-            <option value="qwen3.5:2b">qwen3.5:2b - 2.7GB</option>
-            <option value="qwen3.5:4b">qwen3.5:4b - 3.4GB</option>
-            <option value="qwen3.5:latest">qwen3.5:latest (9b) - 6.6GB</option>
-          </select>
-        </div>
-        <div *ngIf="USE_PLATFORM === 'LM_STUDIO'" style="margin-top: 0.5rem;">
-          <label>Select Your LM Studio Model</label><br />
-          <select [(ngModel)]="LM_STUDIO_MODEL">
-            <option value="gemma4:e2b">gemma4:e2b - 4.2GB</option>
-          </select>
-        </div>
-        <div class="chat" *ngIf="messages.length; else empty">
-          <div *ngFor="let m of messages" class="message" [class.user]="m.from==='user'" [class.bot]="m.from==='bot'">
-            <div class="bubble">{{ m.text }}</div>
+              <option value="qwen3.5:2b">qwen3.5:2b - 2.7GB</option>
+              <option value="qwen3.5:4b">qwen3.5:4b - 3.4GB</option>
+              <option value="qwen3.5:latest">qwen3.5:latest (9b) - 6.6GB</option>
+            </select>
           </div>
-        </div>
-        <ng-template #empty>
+        }
+        @if (USE_PLATFORM === 'LM_STUDIO') {
+          <div style="margin-top: 0.5rem;">
+            <label>Select Your LM Studio Model</label><br />
+            <select [(ngModel)]="LM_STUDIO_MODEL">
+              <option value="gemma4:e2b">gemma4:e2b - 4.2GB</option>
+            </select>
+          </div>
+        }
+        @if (messages.length) {
+          <div class="chat">
+            @for (m of messages; track m) {
+              <div class="message" [class.user]="m.from==='user'" [class.bot]="m.from==='bot'">
+                <div class="bubble">{{ m.text }}</div>
+              </div>
+            }
+          </div>
+        } @else {
           <p class="empty">Say hi — I'll reply!</p>
-        </ng-template>
+        }
 
         <div class="input-row">
           <input [disabled]="loading" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type a message..." />
