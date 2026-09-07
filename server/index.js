@@ -27,7 +27,10 @@ var mock = require('./src/mock');  // mock with free style
 app.use(bodyParser.json());
 
 // Express Route Configuration
-app.use('/', express.static(path.join(__dirname, 'public'))); // app.use(express.static('public'));
+var fs = require('fs');
+var angularDist = 'C:\\workspace\\ngx\\my-ng-21\\dist\\my-ng-21\\browser';
+var publicPath = fs.existsSync(angularDist) ? angularDist : path.join(__dirname, 'public');
+app.use('/', express.static(publicPath));
 page.appRoute(app, db);
 user.appRoute(app, db);
 mockPasscode.appRoute(app, db);

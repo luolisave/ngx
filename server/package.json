@@ -4,6 +4,7 @@
   "description": "Li's cms server",
   "main": "index.js",
   "scripts": {
+    "start": "cross-os _serves",
     "serve": "cross-os _serves",
     "_serves": {
       "darwin": "echo '--- I will only run on Mac' -----",
