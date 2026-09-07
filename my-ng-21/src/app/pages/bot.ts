@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const OLLAMA_API_URL = 'http://localhost:11434/v1/chat/completions';
 const LM_STUDIO_API_URL = 'http://localhost:1234/v1/chat/completions';
-const OPENAI_MODEL = 'gpt-5.4-nano';
+const OPENAI_MODEL = 'gpt-5.6-luna';
 const SYSTEM_PROMPT =
   `You are a helpful assistant.
    Your job is help user input information into a web form.
@@ -183,7 +183,7 @@ const TOOLS = [
         <div>
           <label for="api-key">API provider:</label><br />
           <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OPENAI'">
-          <label for="openai">OpenAI gpt-5.4-nano (cloud)</label><br />
+          <label for="openai">OpenAI gpt-5.6-luna (cloud)</label><br />
           <input type="radio" id="lm-studio" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'LM_STUDIO'">
           <label for="lm-studio">LM Studio (local)</label><br />
           <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
@@ -364,7 +364,7 @@ export class BotPage implements OnInit {
       }
     console.log(' Using Ollama:', this.USE_PLATFORM === 'OLLAMA', 'Using model:', model());
 
-    const body = {
+    const body: any = {
       model: model(),
       messages: [
         { role: 'system', content: SYSTEM_PROMPT + " \n\n User Private Info: " + this.userPrivateInfo + "\n\n" },
@@ -372,6 +372,10 @@ export class BotPage implements OnInit {
       ],
       tools: TOOLS
     };
+    // gpt-5.6-luna + /v1/chat/completions + function tools requires reasoning_effort='none'
+    if (this.USE_PLATFORM === 'OPENAI') {
+      body.reasoning_effort = 'none';
+    }
     if (userText) {
       body.messages.push({ role: 'user', content: userText });
     }
