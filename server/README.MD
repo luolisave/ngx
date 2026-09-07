@@ -56,18 +56,37 @@ Common CRUD rules (`src/crud.js`, LMDB in `src/db.js` stores `users/pages/mocks`
 
 APIs
 ----
+### 0. Postman Collection file:
+```
+liCMS.postman_collection.json
+```
 
-### 1. User — `src/user.js`
+### 1. User — `src/user.js`, store `users`
 
 | Method | Path | Auth | Body | Description |
 | ------ | ---- | ---- | ---- | ----------- |
-| POST | `/api/v1/user/login` | none | `{"username":"admin","password":"pass1234"}` | Login. Hashes `password` with `hasha` (sha512), looks up `users` by `username`. On success returns user doc with `token`, `tokenTime`, `updateDate`. On fail `status:0`. |
+| POST | `/api/v1/user/login` | none | `{"username":"admin","password":"pass1234"}` | Login. Hashes `password` with `hasha` (sha512), looks up `users` by `username`. On success returns user doc (password stripped) with `token`, `tokenTime`, `updateDate`. On fail `status:0`. |
+| POST | `/api/v1/user/register` | token | `{"username":"new","password":"secret", ...extra}` | Register new user (logged-in only). Rejects duplicate `username`/`_id`. Auto-generates `_id` if missing. Password stored as `hasha` sha512. Extra fields (e.g. `displayName`) are kept; `token`/`tokenTime` ignored. |
+| GET | `/api/v1/user/list` | token | - | List all users (passwords stripped). Header `token`. |
+| GET | `/api/v1/user/:xId` | token | - | Get one user by `_id` (password stripped). Header `token`. |
+| PATCH | `/api/v1/user/:xId` | token | JSON partial, e.g. `{"displayName":"Li","password":"newpass"}` | Update user. `password` re-hashed if present. `username` change checked for duplicates. `token`/`tokenTime`/`_id` cannot be set directly. |
+| DELETE | `/api/v1/user/:xId` | token | - | Delete user by `_id`. |
 
 Example:
 
     curl -X POST http://localhost:3333/api/v1/user/login \
       -H "Content-Type: application/json" \
       -d '{"username":"admin","password":"pass1234"}'
+    # then use returned data.token as header `token`:
+    curl -X POST http://localhost:3333/api/v1/user/register \
+      -H "Content-Type: application/json" -H "token: <token>" \
+      -d '{"username":"bob","password":"bob1234"}'
+    curl http://localhost:3333/api/v1/user/list -H "token: <token>"
+    curl http://localhost:3333/api/v1/user/<xId> -H "token: <token>"
+    curl -X PATCH http://localhost:3333/api/v1/user/<xId> \
+      -H "Content-Type: application/json" -H "token: <token>" \
+      -d '{"displayName":"Bob"}'
+    curl -X DELETE http://localhost:3333/api/v1/user/<xId> -H "token: <token>"
 
 ### 2. Page — `src/page.js`, store `pages`, Auth `token`
 

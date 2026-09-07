@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "51da8ee5-3b19-9f7b-d87b-5987b14b64f5",
 		"name": "liCMS",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "102092"
 	},
 	"item": [
 		{
@@ -59,7 +60,6 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "515b836a-2535-49fd-acd4-4d0db7bc1d68",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"///// postman.setEnvironmentVariable(\"token\", jsonData.data.token);",
@@ -98,6 +98,201 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\":\"jerry\",\n  \"password\":\"pass1234\",\n  \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/user/register",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\":\"jerry\",\n  \"password\":\"pass1234\",\n  \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/user/list",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\":\"jerry\",\n  \"password\":\"pass1234\",\n  \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/user/PHQC5Q6xV9ZngqTA",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"PHQC5Q6xV9ZngqTA"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\":\"jerry\",\n  \"password\":\"pass1234\",\n  \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/user/PHQC5Q6xV9ZngqTA",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"PHQC5Q6xV9ZngqTA"
+							]
+						}
+					},
+					"response": []
 				}
 			],
 			"description": "password hashed by SHA512.",
@@ -105,7 +300,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "a4b3e077-417e-4f48-b457-37b7d20048ef",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -115,7 +309,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "6666fce8-5120-444d-b634-fa9bb80493ec",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -133,7 +326,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "1f638c76-ac7d-4519-aa25-f72cf46a3767",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -151,8 +343,8 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": ""
+							"mode": "formdata",
+							"formdata": []
 						},
 						"url": {
 							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
@@ -181,8 +373,8 @@
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": ""
+									"mode": "formdata",
+									"formdata": []
 								},
 								"url": {
 									"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
@@ -239,12 +431,12 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "71184b46-a5a0-4f84-9e3f-ef70a2d4cb22",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -257,11 +449,11 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": ""
+							"mode": "formdata",
+							"formdata": []
 						},
 						"url": {
-							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/E9eycw34UgoibMwj",
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/qLv4QsbkleUfAg7Z",
 							"protocol": "http",
 							"host": [
 								"{{liCMSHost}}"
@@ -271,7 +463,7 @@
 								"api",
 								"v1",
 								"page",
-								"E9eycw34UgoibMwj"
+								"qLv4QsbkleUfAg7Z"
 							]
 						}
 					},
@@ -283,7 +475,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -326,12 +517,59 @@
 					"response": []
 				},
 				{
+					"name": "create page Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"token = postman.getGlobalVariable(\"token\");",
+									"console.log(\"token\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "bWlWzwZIsg2Lzcj2CLg77g1Z6tFlJPiT"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pageTitle\": \"page title with bulk data test 4\",\r\n    \"___bulk\": {\"data\": \"bulk obj, biiiiiiigggggg data should put here, will save in file instead.\"}\r\n}"
+						},
+						"url": {
+							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/create",
+							"protocol": "http",
+							"host": [
+								"{{liCMSHost}}"
+							],
+							"port": "{{liCMSPort}}",
+							"path": [
+								"api",
+								"v1",
+								"page",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "update page",
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -379,7 +617,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -432,7 +669,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "1f638c76-ac7d-4519-aa25-f72cf46a3767",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -450,8 +686,8 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": ""
+							"mode": "formdata",
+							"formdata": []
 						},
 						"url": {
 							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/list?passcode=passcode1234",
@@ -486,8 +722,8 @@
 									}
 								],
 								"body": {
-									"mode": "raw",
-									"raw": ""
+									"mode": "formdata",
+									"formdata": []
 								},
 								"url": {
 									"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
@@ -544,7 +780,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "71184b46-a5a0-4f84-9e3f-ef70a2d4cb22",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -562,8 +797,8 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": ""
+							"mode": "formdata",
+							"formdata": []
 						},
 						"url": {
 							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/mock/S0PaX9SwtVOe7bPD?passcode=passcode1234",
@@ -594,7 +829,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -648,7 +882,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -702,7 +935,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -720,9 +952,9 @@
 							},
 							{
 								"key": "Content-Type",
+								"value": "application/json",
 								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -763,7 +995,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "1f638c76-ac7d-4519-aa25-f72cf46a3767",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -780,10 +1011,6 @@
 								"value": "{{token}}"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/mock/list",
 							"protocol": "http",
@@ -808,10 +1035,6 @@
 										"value": "{{token}}"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": ""
-								},
 								"url": {
 									"raw": "http://{{liCMSHost}}:{{liCMSPort}}/api/v1/page/list",
 									"protocol": "http",
@@ -867,7 +1090,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "71184b46-a5a0-4f84-9e3f-ef70a2d4cb22",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -884,10 +1106,6 @@
 								"value": "{{token}}"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
 							"raw": "http://{{liCMSHost}}:{{liCMSPort}}/mock/1lcyijBFZdahhXpQ",
 							"protocol": "http",
@@ -909,7 +1127,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -963,7 +1180,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -1009,7 +1225,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -1027,9 +1242,9 @@
 							},
 							{
 								"key": "Content-Type",
+								"value": "application/json",
 								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+								"type": "text"
 							}
 						],
 						"body": {
@@ -1057,7 +1272,6 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "ce75d836-76bb-4f13-99aa-03f56ff343eb",
 								"exec": [
 									"token = postman.getGlobalVariable(\"token\");",
 									"console.log(\"token\", token);"
@@ -1075,9 +1289,9 @@
 							},
 							{
 								"key": "Content-Type",
+								"value": "application/json",
 								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
+								"type": "text"
 							}
 						],
 						"body": {
