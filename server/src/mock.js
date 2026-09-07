@@ -1,4 +1,5 @@
 const crud = require('./crud');
+const dbHelper = require('./db');
 const currentDB = 'mocks';
 
 function appRoute(app, db){
@@ -6,16 +7,15 @@ function appRoute(app, db){
     // mock business starts =========================================================================================
     app.patch('/mock/business', (req, res) => {
         const mockDB = db['mocks'];
-        mockDB.findOne({ _id: '1lcyijBFZdahhXpQ' }, function (err, doc) {
-            if(!err && doc){
-                res.setHeader('Content-Type', 'application/json');
-                doc.modify = 'modified according to business';
-                res.send(JSON.stringify(doc));
-            }else{
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({err:err,doc:doc}));
-            }
-        }); 
+        const doc = dbHelper.findOne(mockDB, { _id: '1lcyijBFZdahhXpQ' });
+        if(doc){
+            res.setHeader('Content-Type', 'application/json');
+            doc.modify = 'modified according to business';
+            res.send(JSON.stringify(doc));
+        }else{
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({err:null,doc:null}));
+        }
     });
 
     

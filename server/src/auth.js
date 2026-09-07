@@ -1,4 +1,5 @@
 const CONSTANTS = require('./const');
+const dbHelper = require('./db');
 
 function getToken(req, res){
     let token = '';
@@ -41,21 +42,19 @@ function isloggedIn(req, res, db, dbX, options, executeFunctionAfterCheck){
         let timeDifference = 0;
         let currentUnixTime = Math.floor(new Date() / 1000);
         let token = getToken(req, res);
-        db.users.findOne({ token: token }, function (err, doc) {
-            // console.log('doc ======>', doc);
-            if(doc){
-                timeDifference = currentUnixTime - doc.tokenTime;
-                if(timeDifference < CONSTANTS.USER_LOGIN_TIMEOUT){
-                    executeFunctionAfterCheck(req, res, dbX);
-                }else{
-                    res.setHeader('Content-Type', 'application/json');
-                    res.send(JSON.stringify({ status: 0, info: 'auth: login expired.', data:{} }));
-                }
+        const doc = dbHelper.findOne(db.users, { token: token });
+        if(doc){
+            timeDifference = currentUnixTime - doc.tokenTime;
+            if(timeDifference < CONSTANTS.USER_LOGIN_TIMEOUT){
+                executeFunctionAfterCheck(req, res, dbX);
             }else{
                 res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({ status: 0, info: 'auth: not log in yet.', data:{} }));
+                res.send(JSON.stringify({ status: 0, info: 'auth: login expired.', data:{} }));
             }
-        });
+        }else{
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({ status: 0, info: 'auth: not log in yet.', data:{} }));
+        }
     }else if(options && options.method === 'passcode'){
         let passcode = getPasscode(req, res);
         console.log('auth method is: passcode. CONSTANTS.PASSCODE=',CONSTANTS.PASSCODE);

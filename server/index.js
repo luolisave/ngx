@@ -4,15 +4,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-// Database (nedb)
-var Datastore = require('nedb');
-var db = {};
-db.users = new Datastore({ filename: path.join(__dirname, 'private/nedb/users') });
-db.users.loadDatabase();
-db.pages = new Datastore({ filename: path.join(__dirname, 'private/nedb/pages') });
-db.pages.loadDatabase();
-db.mocks = new Datastore({ filename: path.join(__dirname, 'private/nedb/mocks') });
-db.mocks.loadDatabase();
+// Database (LMDB - native)
+var db = require('./src/db').stores;
 
 // import modules
 var auth = require('./src/auth');
