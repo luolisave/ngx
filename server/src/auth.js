@@ -9,6 +9,9 @@ function getToken(req, res){
     }else if(req.params.token){
         token = req.params.token;
         return token;
+    }else if(req.query && req.query.token){
+        token = req.query.token;
+        return token;
     }else if(req.body && req.body.token){
         token = req.body.token;
         return token;
@@ -46,7 +49,7 @@ function isloggedIn(req, res, db, dbX, options, executeFunctionAfterCheck){
         if(doc){
             timeDifference = currentUnixTime - doc.tokenTime;
             if(timeDifference < CONSTANTS.USER_LOGIN_TIMEOUT){
-                executeFunctionAfterCheck(req, res, dbX);
+                executeFunctionAfterCheck(req, res, dbX, doc);
             }else{
                 res.setHeader('Content-Type', 'application/json');
                 res.send(JSON.stringify({ status: 0, info: 'auth: login expired.', data:{} }));

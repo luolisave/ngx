@@ -19,6 +19,7 @@ function openStore(name) {
 
 const stores = {
     users: openStore('users'),
+    userInfo: openStore('userInfo'),
     pages: openStore('pages'),
     mocks: openStore('mocks')
 };

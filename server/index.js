@@ -10,6 +10,7 @@ var db = require('./src/db').stores;
 // import modules
 var auth = require('./src/auth');
 var user = require('./src/user');
+var userInfo = require('./src/user-info');
 var page = require('./src/page');
 // mock and mock-passcode share same database file (mocks)
 var mockPasscode = require('./src/mock-passcode'); //mock requires passcode
@@ -26,6 +27,7 @@ var publicPath = fs.existsSync(angularDist) ? angularDist : path.join(__dirname,
 app.use('/', express.static(publicPath));
 page.appRoute(app, db);
 user.appRoute(app, db);
+userInfo.appRoute(app, db);
 mockPasscode.appRoute(app, db);
 mock.appRoute(app, db);
 
