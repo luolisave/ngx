@@ -183,7 +183,7 @@ const TOOLS = [
         <div>
           <label for="api-key">API provider:</label><br />
           <input type="radio" id="openai" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OPENAI'">
-          <label for="openai">OpenAI gpt-5.4-nano (cloud)</label>><br />
+          <label for="openai">OpenAI gpt-5.4-nano (cloud)</label><br />
           <input type="radio" id="lm-studio" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'LM_STUDIO'">
           <label for="lm-studio">LM Studio (local)</label><br />
           <input type="radio" id="ollama" name="api-type" [(ngModel)]="USE_PLATFORM" [value]="'OLLAMA'">
